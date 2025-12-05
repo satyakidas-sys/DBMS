@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data World - Futuristic Learning</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00f3ff;
+            /* Default Cyan */
+            --secondary-color: #bc13fe;
+            /* Default Purple */
+            --dark-bg: #050510;
+            --panel-bg: rgba(10, 15, 30, 0.95);
+            --tech-font: 'Orbitron', sans-serif;
+            --body-font: 'Rajdhani', sans-serif;
+        }
+        body {
+            margin: 0;
+            font-family: var(--body-font);
+            background-color: var(--dark-bg);
+            /* Futuristic Grid Background */
+            background-image:
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, #0a0a15 0%, #000 100%);
+            background-size: 50px 50px, 50px 50px, 100% 100%;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+            transition: background-color 0.5s ease;
+        }
+        /* --- INTRO SCREEN --- */
+        #introScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease-out;
+        }
+        .power-assembly {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Central Power Button */
+        #powerBtn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--primary-color), inset 0 0 10px var(--primary-color);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+        }
+        #powerBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px var(--primary-color), inset 0 0 20px var(--primary-color);
+            text-shadow: 0 0 10px #fff;
+        }
+        /* Inner Cyan Glow Ring */
+        .ring-glow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 30px var(--primary-color);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        /* Dashed Purple Ring */
+        .ring-dashed {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px dashed var(--secondary-color);
+            animation: spin 20s linear infinite;
+            pointer-events: none;
+        }
+        /* Outer Thin Cyan Ring */
+        .ring-outer {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            animation: pulse-ring 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes pulse-ring {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+        #introMsg {
+            margin-top: 60px;
+            font-family: var(--tech-font);
+            font-size: 28px;
+            letter-spacing: 6px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--primary-color);
+            display: none;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #typeMsg {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #ffffff;
+            min-height: 50px;
+            font-weight: 500;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            line-height: 1.6;
+            text-align: center;
+            padding: 0 20px;
+        }
+        /* --- MAIN UI --- */
+        .container {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            flex-direction: row;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        /* --- FUTURISTIC SIDEBAR --- */
+        .sidebar {
+            width: 340px;
+            height: 100%;
+            background: var(--panel-bg);
+            border-right: 1px solid rgba(0, 243, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            position: fixed;
+            left: 0;
+            top: 0;
+            backdrop-filter: blur(15px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .sidebar.minimized {
+            transform: translateX(-340px);
+        }
+        /* Sidebar Decorative Line */
+        .sidebar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
+            opacity: 0.5;
+        }
+        .brand-container {
+            padding: 30px 20px;
+            background: linear-gradient(90deg, rgba(0, 243, 255, 0.05), transparent);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .brand {
+            font-family: var(--tech-font);
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--primary-color);
+            background: linear-gradient(to bottom, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-sub {
+            font-size: 10px;
+            color: var(--primary-color);
+            letter-spacing: 4px;
+            margin-top: 5px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            position: absolute;
+            top: 50%;
+            right: -30px;
+            /* Hangs outside the sidebar */
+            width: 30px;
+            height: 60px;
+            transform: translateY(-50%);
+            background: var(--panel-bg);
+            border: 1px solid var(--primary-color);
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-family: var(--tech-font);
+            font-size: 18px;
+            z-index: 101;
+            transition: all 0.3s ease;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar-toggle:hover {
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+        .module-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1;
+            padding: 20px 15px;
+        }
+        .module-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .module-list::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        .module-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        /* Holographic Button Style */
+        .module-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #8892b0;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-family: var(--body-font);
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .module-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-color: var(--primary-color);
+            padding-left: 25px;
+            text-shadow: 0 0 8px var(--primary-color);
+        }
+        .module-btn.active {
+            background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), transparent);
+            border-left: 4px solid var(--primary-color);
+            border-color: rgba(var(--primary-rgb), 0.3);
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary-color);
+            padding-left: 25px;
+        }
+        /* --- MAIN CONTENT AREA --- */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            perspective: 1500px;
+            position: relative;
+            margin-left: 340px;
+            /* Offset for fixed sidebar */
+            transition: margin-left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            height: 100vh;
+        }
+        .sidebar.minimized+.content-area {
+            margin-left: 0;
+        }
+        /* Holographic TV Container */
+        .tv-set {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            background: #050505;
+            padding: 10px;
+            box-shadow:
+                0 0 0 1px #333,
+                0 0 60px var(--primary-color-dim),
+                0 30px 60px rgba(0, 0, 0, 0.8);
+            transform-style: preserve-3d;
+            transition: box-shadow 0.5s ease;
+            border-radius: 4px;
+        }
+        /* Corner Accents */
+        .tv-set::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid var(--primary-color);
+            clip-path: polygon(0 20px, 20px 0,
+                    calc(100% - 20px) 0, 100% 20px,
+                    100% calc(100% - 20px), calc(100% - 20px) 100%,
+                    20px 100%, 0 calc(100% - 20px));
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .screen-bezel {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+        /* Scanlines */
+        .screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 4px 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.4;
+        }
+        .control-blocker {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: transparent;
+            z-index: 20;
+            pointer-events: auto;
+        }
+        /* SCANNING OVERLAY */
+        .scanning-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 10, 0.95);
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+        .scan-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(transparent 95%, var(--primary-color) 50%),
+                linear-gradient(90deg, transparent 95%, var(--primary-color) 50%);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+        .scan-bar {
+            width: 100%;
+            height: 5px;
+            background: var(--primary-color);
+            box-shadow: 0 0 20px var(--primary-color);
+            position: absolute;
+            top: 0;
+            animation: scanMove 1.5s ease-in-out infinite;
+            opacity: 0.8;
+        }
+        .scan-text {
+            font-family: var(--tech-font);
+            font-size: 24px;
+            letter-spacing: 4px;
+            animation: blink 0.5s infinite;
+            z-index: 31;
+            text-shadow: 0 0 10px var(--primary-color);
+            text-align: center;
+            padding: 0 10px;
+        }
+        @keyframes scanMove {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: contrast(1.1) saturate(1.1);
+            outline: none;
+        }
+        /* Floating Stand */
+        .tv-stand {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            filter: blur(15px);
+            opacity: 0.4;
+            transition: background 0.5s ease;
+        }
+        .tv-brand {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.2);
+            font-family: var(--tech-font);
+            font-size: 14px;
+            letter-spacing: 8px;
+            z-index: 6;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+        .controls-hint {
+            margin-top: 60px;
+            font-family: var(--tech-font);
+            color: var(--primary-color);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse 3s infinite;
+            text-shadow: 0 0 10px var(--primary-color);
+            transition: color 0.5s ease, text-shadow 0.5s ease;
+            text-align: center;
+        }
+        .footer-credits {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-family: var(--body-font);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: right;
+        }
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        .sound-toggle:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px var(--primary-color);
+            transform: scale(1.1);
+        }
+        /* --- QUIZ MODAL --- */
+        .quiz-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        .quiz-box {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(10, 15, 30, 0.95);
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .quiz-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        .quiz-box::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+        }
+        .quiz-header {
+            font-family: var(--tech-font);
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+        .question-item {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .option-btn {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ccc;
+            padding: 10px;
+            cursor: pointer;
+            font-family: var(--body-font);
+            font-size: 16px;
+            transition: all 0.2s ease;
+            text-align: left;
+            border-radius: 4px;
+        }
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+        }
+        .option-btn.correct {
+            background: rgba(0, 255, 0, 0.2) !important;
+            border-color: #00ff00 !important;
+            color: #fff !important;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+        .option-btn.wrong {
+            background: rgba(255, 0, 0, 0.2) !important;
+            border-color: #ff0000 !important;
+            color: #fff !important;
+        }
+        .question-item.solved-correct {
+            border-color: rgba(0, 255, 0, 0.3);
+            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.05);
+        }
+        .question-item.solved-wrong {
+            border-color: rgba(255, 0, 0, 0.3);
+            box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.05);
+        }
+        .quiz-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .proceed-btn {
+            background: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-family: var(--tech-font);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: all 0.3s ease;
+        }
+        .proceed-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+        /* --- MOBILE RESPONSIVE STYLES --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-340px);
+                /* Hidden by default on mobile */
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                right: -40px;
+                width: 40px;
+                height: 50px;
+                font-size: 24px;
+                background: rgba(0, 0, 0, 0.8);
+                border-radius: 0 8px 8px 0;
+            }
+            .content-area {
+                margin-left: 0;
+                padding: 20px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .tv-set {
+                width: 100%;
+                aspect-ratio: 16/9;
+            }
+            .tv-stand {
+                width: 60%;
+                bottom: -30px;
+            }
+            .footer-credits {
+                font-size: 10px;
+                bottom: 10px;
+                right: 10px;
+                width: 100%;
+                text-align: center;
+            }
+            .controls-hint {
+                font-size: 10px;
+                margin-top: 30px;
+            }
+            #introMsg {
+                font-size: 20px;
+            }
+            #typeMsg {
+                font-size: 14px;
+            }
+            .power-assembly {
+                transform: scale(0.8);
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SOUND TOGGLE -->
+    <div class="sound-toggle" onclick="toggleSound()">
+        <span id="soundIcon">🔇</span>
+    </div>
+    <!-- INTRO SCREEN -->
+    <div id="introScreen">
+        <div class="power-assembly">
+            <div class="ring-outer"></div>
+            <div class="ring-dashed"></div>
+            <div class="ring-glow"></div>
+            <div id="powerBtn" onclick="startIntro()">⏻</div>
+        </div>
+        <div id="introMsg">SYSTEM INITIALIZING...</div>
+        <div id="typeMsg"></div>
+    </div>
+    <!-- QUIZ MODAL -->
+    <div class="quiz-overlay" id="quizModal">
+        <div class="quiz-box">
+            <div class="quiz-header">Knowledge Check</div>
+            <div id="quizQuestions">
+                <!-- Questions injected here -->
+            </div>
+            <div class="quiz-footer">
+                <button class="proceed-btn" onclick="completeQuiz()">PROCEED TO MODULE</button>
+            </div>
+        </div>
+    </div>
+    <!-- MAIN UI -->
+    <div class="container" id="courseUI">
+        <!-- SIDEBAR -->
+        <div class="sidebar minimized" id="mainSidebar">
+            <div class="sidebar-toggle" onclick="toggleSidebar()">»</div>
+            <div class="brand-container">
+                <div class="brand" id="brandText">DATA WORLD</div>
+                <div class="brand-sub">SYSTEM_V.2.0</div>
+            </div>
+            <div class="module-list" id="moduleList">
+                <!-- Generated via JS or static -->
+                <div class="module-btn" data-id="1"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAGzIvoS68k/kagxFI1vsAEVMsiknUV-eA/view?embed&hide_controls=1', this, '#00f3ff')">
+                    01. Data Modeling</div>
+                <div class="module-btn" data-id="2"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAGzIoUODDE/L7YBebWitOUxZcxQ6M7P1A/view?embed&hide_controls=1', this, '#bc13fe')">
+                    02. Joining</div>
+                <div class="module-btn" data-id="3"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAGzrZ1HhqQ/OIGOuEQiOF40-1YDF-2qpw/view?embed&hide_controls=1', this, '#ff0055')">
+                    03. Set Operators</div>
+                <div class="module-btn" data-id="4"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAGzrb_aG9c/CtaPSGjLzbD8Hz5vCe1lnA/view?embed&hide_controls=1', this, '#00ff9d')">
+                    04. Sub Query (Non-Corr)</div>
+                <div class="module-btn" data-id="5"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAGz9fGffqQ/Tjm9Z3AjcY6rMgTjHdAW2g/view?embed&hide_controls=1', this, '#ffcc00')">
+                    05. Sub Query (Corr)</div>
+                <div class="module-btn" data-id="6"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG0b9zc6j0/QCqcm27sR6LSAwTHkjMn_w/view?embed&hide_controls=1', this, '#ff6600')">
+                    06. CTE & View</div>
+                <div class="module-btn" data-id="7"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG3VLLbcDc/eETtcBwGDKcpxxgLDK7IkA/view?embed&hide_controls=1', this, '#ff3333')">
+                    07. Normalization</div>
+                <div class="module-btn" data-id="8"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG3pO8Yw0s/8y57XB5moVyrRqGQ0q-58Q/view?embed&hide_controls=1', this, '#0099ff')">
+                    08. Transaction</div>
+                <div class="module-btn" data-id="9"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG4RAFo2JI/84ZAWELgxFUbH_YCqJW8FA/view?embed&hide_controls=1', this, '#00ffcc')">
+                    09. Indexing</div>
+                <div class="module-btn" data-id="10"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAGyAY8wQwA/oA38fpvXM8sAGJjI1jwfOw/view?embed&hide_controls=1', this, '#ff00cc')">
+                    10. MongoDB Install</div>
+                <div class="module-btn" data-id="11"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG47fVqzrc/E_NOfyrT2Lj0Wn-Rzs0xZg/view?embed&hide_controls=1', this, '#ccff00')">
+                    11. CRUD Operations</div>
+                <div class="module-btn" data-id="12"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG5ckkOVgk/BndPSuA2Nhx_FeO2Wv9f-Q/view?embed&hide_controls=1', this, '#6600ff')">
+                    12. Update & Query Ops</div>
+                <div class="module-btn" data-id="13"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG5QELiBu0/jbDUl6rdsCX4FrtHiBHFDg/view?embed&hide_controls=1', this, '#cc00ff')">
+                    13. Embedding</div>
+                <div class="module-btn" data-id="14"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG5lQAWkwA/f4tO6lE3WHI56eQ7zYu33A/view?embed&hide_controls=1', this, '#ffd700')">
+                    14. Aggregation</div>
+                <div class="module-btn" data-id="15"
+                    onclick="initModuleLoad('https://www.canva.com/design/DAG5zZWZ_i4/15f0EsxMki-pjqpD1Ak54Q/view?embed&hide_controls=1', this, '#ffffff')">
+                    15. Final Session</div>
+            </div>
+        </div>
+        <!-- CONTENT -->
+        <div class="content-area">
+            <div class="tv-set">
+                <div class="screen-bezel">
+                    <div class="screen-overlay"></div>
+                    <!-- SCANNING OVERLAY -->
+                    <div class="scanning-overlay" id="scanner">
+                        <div class="scan-grid"></div>
+                        <div class="scan-bar"></div>
+                        <div class="scan-text">ANALYZING DATA STREAM...</div>
+                    </div>
+                    <div class="tv-brand">DATA WORLD</div>
+                    <div class="control-blocker"></div>
+                    <iframe id="frame"
+                        src="https://www.canva.com/design/DAGzIvoS68k/kagxFI1vsAEVMsiknUV-eA/view?embed&hide_controls=1"
+                        tabindex="0" allow="fullscreen"></iframe>
+                </div>
+                <div class="tv-stand"></div>
+            </div>
+            <div class="controls-hint">Use Left Arrow and Right arrow to navigate</div>
+            <div class="footer-credits">Ideation & Presentation Creation – Satyaki Das</div>
+        </div>
+    </div>
+    <script>
+        // Helper to convert hex to rgb for rgba usage
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ?
+                `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+        }
+        // Sound System
+        let soundEnabled = false;
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        function toggleSound() {
+            initAudio();
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            const btn = document.querySelector('.sound-toggle');
+            if (soundEnabled) {
+                icon.innerHTML = "🔊";
+                btn.style.boxShadow = "0 0 15px var(--primary-color)";
+                btn.style.background = "rgba(0, 243, 255, 0.2)";
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playTone(600, 'sine', 0.1); // Confirmation beep
+            } else {
+                icon.innerHTML = "🔇";
+                btn.style.boxShadow = "none";
+                btn.style.background = "rgba(0,0,0,0.6)";
+            }
+        }
+        function playTone(freq, type, duration) {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+        function startIntro() {
+            const introMsg = document.getElementById("introMsg");
+            const powerBtn = document.getElementById("powerBtn");
+            playTone(200, 'sawtooth', 0.5);
+            // Animate rings on click
+            document.querySelector('.ring-dashed').style.animationDuration = '2s';
+            document.querySelector('.ring-outer').style.transform = 'scale(1.2)';
+            document.querySelector('.ring-outer').style.opacity = '0';
+            powerBtn.style.boxShadow = "0 0 80px var(--primary-color)";
+            powerBtn.style.transform = "scale(0.9)";
+            setTimeout(() => {
+                introMsg.style.display = "block";
+                typeWriter();
+            }, 500);
+        }
+        function typeWriter() {
+            const line1 = "Distraction is injurious to studies.";
+            const line2 = "It causes incomplete learning...";
+            let i = 0;
+            let j = 0;
+            const typeMsg = document.getElementById("typeMsg");
+            typeMsg.innerHTML = "";
+            function typeLine1() {
+                if (i < line1.length) {
+                    typeMsg.innerHTML += line1.charAt(i);
+                    playTone(800 + (Math.random() * 200), 'sine', 0.05); // Typing sound
+                    i++;
+                    setTimeout(typeLine1, 50);
+                } else {
+                    typeMsg.innerHTML += "<br>";
+                    setTimeout(typeLine2, 400);
+                }
+            }
+            function typeLine2() {
+                if (j < line2.length) {
+                    typeMsg.innerHTML += line2.charAt(j);
+                    playTone(800 + (Math.random() * 200), 'sine', 0.05); // Typing sound
+                    j++;
+                    setTimeout(typeLine2, 50);
+                } else {
+                    setTimeout(launchSystem, 1500);
+                }
+            }
+            typeLine1();
+        }
+        function launchSystem() {
+            const introScreen = document.getElementById("introScreen");
+            const courseUI = document.getElementById("courseUI");
+            playTone(100, 'square', 1.0); // Launch sound
+            introScreen.style.opacity = "0";
+            setTimeout(() => {
+                introScreen.style.display = "none";
+                courseUI.style.display = "flex";
+                // Trigger reflow
+                void courseUI.offsetWidth;
+                courseUI.style.opacity = "1";
+                // Initial focus
+                const frame = document.getElementById("frame");
+                frame.focus();
+            }, 800);
+        }
+        // --- QUIZ DATA & LOGIC ---
+        const quizData = {
+            1: [ // Data Modeling (Intro / Generic)
+                { q: "What does SQL stand for?", options: ["Structured Query Language", "Simple Query Logic", "System Question List", "None"], ans: 0 },
+                { q: "What is a Relational Database?", options: ["Collection of tables", "Collection of files", "Collection of objects", "None"], ans: 0 }
+            ],
+            2: [ // Joining (Test: Data Modeling)
+                { q: "What does ERD stand for?", options: ["Entity Relationship Diagram", "Entity Role Data", "Entry Row Database", "None"], ans: 0 },
+                { q: "A primary key must be:", options: ["Null", "Duplicate", "Unique", "Optional"], ans: 2 }
+            ],
+            3: [ // Set Operators (Test: Joining)
+                { q: "Which join returns only matching rows?", options: ["Left Join", "Right Join", "Inner Join", "Full Join"], ans: 2 },
+                { q: "Which join returns all rows from left table?", options: ["Left Join", "Right Join", "Inner Join", "Cross Join"], ans: 0 }
+            ],
+            4: [ // Sub Query Non-Corr (Test: Set Operators)
+                { q: "Which operator combines results and removes duplicates?", options: ["UNION ALL", "UNION", "INTERSECT", "MINUS"], ans: 1 },
+                { q: "Which operator returns common rows between two sets?", options: ["UNION", "EXCEPT", "INTERSECT", "CROSS"], ans: 2 }
+            ],
+            5: [ // Sub Query Corr (Test: Sub Query Non-Corr)
+                { q: "A non-correlated subquery executes:", options: ["Once for entire query", "Once per row", "Twice", "Never"], ans: 0 },
+                { q: "Can a non-correlated subquery run independently?", options: ["Yes", "No", "Only sometimes", "Never"], ans: 0 }
+            ],
+            6: [ // CTE & View (Test: Sub Query Corr)
+                { q: "A correlated subquery executes:", options: ["Once for entire query", "Once per row", "Randomly", "Never"], ans: 1 },
+                { q: "Does a correlated subquery depend on the outer query?", options: ["No", "Yes", "Maybe", "Sometimes"], ans: 1 }
+            ],
+            7: [ // Normalization (Test: CTE & View)
+                { q: "What is a CTE?", options: ["Common Table Expression", "Common Text Entry", "Central Table Entity", "None"], ans: 0 },
+                { q: "A View is known as a:", options: ["Physical Table", "Virtual Table", "Stored Procedure", "Trigger"], ans: 1 }
+            ],
+            8: [ // Transaction (Test: Normalization)
+                { q: "1NF requires columns to be:", options: ["Atomic", "Duplicate", "Null", "Complex"], ans: 0 },
+                { q: "The goal of normalization is to reduce:", options: ["Performance", "Redundancy", "Security", "Storage"], ans: 1 }
+            ],
+            9: [ // Indexing (Test: Transaction)
+                { q: "What does ACID stand for?", options: ["Atomicity, Consistency, Isolation, Durability", "All, Clear, In, Data", "Auto, Create, Insert, Delete", "None"], ans: 0 },
+                { q: "Which command saves a transaction?", options: ["ROLLBACK", "SAVEPOINT", "COMMIT", "END"], ans: 2 }
+            ],
+            10: [ // MongoDB Install (Test: Indexing)
+                { q: "Indexes are used to:", options: ["Slow down writes", "Speed up retrieval", "Hide data", "Encrypt data"], ans: 1 },
+                { q: "Which data structure is commonly used for indexes?", options: ["Stack", "Queue", "B-Tree", "Linked List"], ans: 2 }
+            ],
+            11: [ // CRUD Ops (Test: MongoDB Install)
+                { q: "MongoDB is a ___ database.", options: ["Relational", "NoSQL", "Graph", "Key-Value"], ans: 1 },
+                { q: "Data in MongoDB is stored in:", options: ["Tables", "Rows", "BSON Documents", "CSV"], ans: 2 }
+            ],
+            12: [ // Update & Query Ops (Test: CRUD Ops)
+                { q: "Which command inserts a document?", options: ["addOne", "insertOne", "put", "push"], ans: 1 },
+                { q: "Which command finds documents?", options: ["search", "select", "find", "get"], ans: 2 }
+            ],
+            13: [ // Embedding (Test: Update & Query Ops)
+                { q: "Which operator updates a value?", options: ["$set", "$get", "$put", "$update"], ans: 0 },
+                { q: "Which operator is used for 'greater than'?", options: ["$gt", "$lt", "$eq", "$gte"], ans: 0 }
+            ],
+            14: [ // Aggregation (Test: Embedding)
+                { q: "Embedding is preferred when data is:", options: ["Accessed together", "Rarely accessed", "Large", "Unrelated"], ans: 0 },
+                { q: "What is the alternative to Embedding?", options: ["Referencing", "Deleting", "Copying", "Sharding"], ans: 0 }
+            ],
+            15: [ // Final Session (Test: Aggregation)
+                { q: "Which stage filters documents in aggregation?", options: ["$group", "$match", "$sort", "$project"], ans: 1 },
+                { q: "Which stage groups documents?", options: ["$filter", "$match", "$group", "$limit"], ans: 2 }
+            ]
+        };
+        let pendingLoad = null;
+        function initModuleLoad(link, btn, color) {
+            // Store pending load details
+            pendingLoad = { link, btn, color };
+            // Determine Module ID
+            const modId = btn.getAttribute('data-id');
+            const questions = quizData[modId] || quizData[1];
+            // Populate Quiz
+            const quizContainer = document.getElementById('quizQuestions');
+            quizContainer.innerHTML = "";
+            questions.forEach((item, idx) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-item';
+                qDiv.innerHTML = `<div class="question-text">${idx + 1}. ${item.q}</div>`;
+                const optDiv = document.createElement('div');
+                optDiv.className = 'options-grid';
+                item.options.forEach((opt, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(btn, optIdx, item.ans, qDiv);
+                    optDiv.appendChild(btn);
+                });
+                qDiv.appendChild(optDiv);
+                quizContainer.appendChild(qDiv);
+            });
+            // Show Modal
+            document.getElementById('quizModal').style.display = 'flex';
+            playTone(300, 'sine', 0.2);
+        }
+        function checkAnswer(btn, selectedIdx, correctIdx, qDiv) {
+            // Disable all buttons in this question
+            const allBtns = qDiv.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            if (selectedIdx === correctIdx) {
+                btn.classList.add('correct');
+                qDiv.classList.add('solved-correct');
+                playTone(600, 'sine', 0.2); // Success beep
+                playTone(800, 'sine', 0.1);
+            } else {
+                btn.classList.add('wrong');
+                qDiv.classList.add('solved-wrong');
+                // Highlight correct one
+                allBtns[correctIdx].classList.add('correct');
+                playTone(150, 'sawtooth', 0.3); // Error buzz
+            }
+        }
+        function completeQuiz() {
+            document.getElementById('quizModal').style.display = 'none';
+            if (pendingLoad) {
+                load(pendingLoad.link, pendingLoad.btn, pendingLoad.color);
+            }
+        }
+        function load(link, btn, color) {
+            const frame = document.getElementById("frame");
+            const scanner = document.getElementById("scanner");
+            // Play Click Sound
+            playTone(600, 'sine', 0.1);
+            // Update active state
+            const buttons = document.querySelectorAll('.module-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            // Update Theme Colors
+            if (color) {
+                document.documentElement.style.setProperty('--primary-color', color);
+                document.documentElement.style.setProperty('--primary-color-dim', color + '40'); // 25% opacity
+                const rgb = hexToRgb(color);
+                if (rgb) {
+                    document.documentElement.style.setProperty('--primary-rgb', rgb);
+                }
+            }
+            // START SCANNING SEQUENCE
+            scanner.style.display = "flex";
+            playTone(150, 'sawtooth', 0.5); // Scan start sound
+            // Simulate scanning sound loop
+            let scanLoop = 0;
+            if (soundEnabled) {
+                scanLoop = setInterval(() => {
+                    playTone(800 + Math.random() * 400, 'sine', 0.1);
+                }, 200);
+            }
+            // Load content in background
+            frame.src = link;
+            // After 3 seconds, hide scanner and show content
+            setTimeout(() => {
+                scanner.style.display = "none";
+                clearInterval(scanLoop);
+                playTone(400, 'sine', 0.3); // Success sound
+                // Focus the iframe for keyboard navigation
+                frame.focus();
+                if (frame.contentWindow) {
+                    try { frame.contentWindow.focus(); } catch (e) { }
+                }
+            }, 3000);
+        }
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            // For mobile, we toggle 'active' class instead of 'minimized' logic
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+                if (sidebar.classList.contains('active')) {
+                    toggleBtn.innerHTML = "«";
+                } else {
+                    toggleBtn.innerHTML = "»";
+                }
+            } else {
+                sidebar.classList.toggle('minimized');
+                if (sidebar.classList.contains('minimized')) {
+                    toggleBtn.innerHTML = "»";
+                } else {
+                    toggleBtn.innerHTML = "«";
+                }
+            }
+            playTone(500, 'square', 0.1);
+        }
+        // Add hover sounds to buttons
+        document.querySelectorAll('.module-btn, #powerBtn, .sidebar-toggle, .option-btn, .proceed-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => playTone(400, 'sine', 0.05));
+        });
+        // Initial Setup
+        document.documentElement.style.setProperty('--primary-color', '#00f3ff');
+        document.documentElement.style.setProperty('--primary-color-dim', '#00f3ff40');
+        document.documentElement.style.setProperty('--primary-rgb', '0, 243, 255');
+        // Security
+        document.addEventListener("contextmenu", e => e.preventDefault());
+        document.onkeydown = function (e) {
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false;
+            if (e.ctrlKey && e.keyCode == 85) return false;
+            if (e.ctrlKey && e.keyCode == 83) return false;
+            if (e.ctrlKey && e.keyCode == 67) return false;
+        };
+    </script>
+</body>
+</html>
