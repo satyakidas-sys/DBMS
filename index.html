@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data World - Futuristic Learning</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00f3ff;
+            /* Default Cyan */
+            --secondary-color: #bc13fe;
+            /* Default Purple */
+            --dark-bg: #050510;
+            --panel-bg: rgba(10, 15, 30, 0.9);
+            --tech-font: 'Orbitron', sans-serif;
+            --body-font: 'Rajdhani', sans-serif;
+        }
+        body {
+            margin: 0;
+            font-family: var(--body-font);
+            background-color: var(--dark-bg);
+            /* Futuristic Grid Background */
+            background-image:
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, #0a0a15 0%, #000 100%);
+            background-size: 50px 50px, 50px 50px, 100% 100%;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+            transition: background-color 0.5s ease;
+        }
+        /* --- INTRO SCREEN --- */
+        #introScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease-out;
+        }
+        .power-assembly {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Central Power Button */
+        #powerBtn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--primary-color), inset 0 0 10px var(--primary-color);
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+        }
+        #powerBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px var(--primary-color), inset 0 0 20px var(--primary-color);
+            text-shadow: 0 0 10px #fff;
+        }
+        /* Inner Cyan Glow Ring */
+        .ring-glow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 30px var(--primary-color);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        /* Dashed Purple Ring */
+        .ring-dashed {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px dashed var(--secondary-color);
+            animation: spin 20s linear infinite;
+            pointer-events: none;
+        }
+        /* Outer Thin Cyan Ring */
+        .ring-outer {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            animation: pulse-ring 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes pulse-ring {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+        #introMsg {
+            margin-top: 60px;
+            font-family: var(--tech-font);
+            font-size: 28px;
+            letter-spacing: 6px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--primary-color);
+            display: none;
+            text-transform: uppercase;
+        }
+        #typeMsg {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #ffffff;
+            min-height: 50px;
+            font-weight: 500;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        /* --- MAIN UI --- */
+        .container {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            flex-direction: row;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        /* --- FUTURISTIC SIDEBAR --- */
+        .sidebar {
+            width: 340px;
+            height: 100%;
+            background: rgba(10, 15, 25, 0.95);
+            border-right: 1px solid rgba(0, 243, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 50px rgba(0, 0, 0, 0.8);
+            z-index: 10;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+        /* Sidebar Decorative Line */
+        .sidebar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--primary-color), transparent);
+            opacity: 0.5;
+        }
+        .brand-container {
+            padding: 30px 20px;
+            background: linear-gradient(90deg, rgba(0, 243, 255, 0.05), transparent);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .brand {
+            font-family: var(--tech-font);
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--primary-color);
+            background: linear-gradient(to bottom, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-sub {
+            font-size: 10px;
+            color: var(--primary-color);
+            letter-spacing: 4px;
+            margin-top: 5px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        .module-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+            padding: 20px 15px;
+        }
+        .module-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .module-list::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        .module-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        /* Holographic Button Style */
+        .module-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #8892b0;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-family: var(--body-font);
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%, 0 15px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+        .module-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-color: var(--primary-color);
+            padding-left: 25px;
+            text-shadow: 0 0 8px var(--primary-color);
+        }
+        .module-btn.active {
+            background: linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), transparent);
+            border-left: 4px solid var(--primary-color);
+            border-color: rgba(var(--primary-rgb), 0.3);
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary-color);
+            padding-left: 25px;
+        }
+        /* --- MAIN CONTENT AREA --- */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            perspective: 1500px;
+            position: relative;
+        }
+        /* Holographic TV Container */
+        .tv-set {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            background: #050505;
+            padding: 10px;
+            box-shadow:
+                0 0 0 1px #333,
+                0 0 60px var(--primary-color-dim),
+                0 30px 60px rgba(0, 0, 0, 0.8);
+            transform-style: preserve-3d;
+            transform: rotateX(2deg);
+            transition: box-shadow 0.5s ease;
+            border-radius: 4px;
+        }
+        /* Corner Accents */
+        .tv-set::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid var(--primary-color);
+            clip-path: polygon(0 20px, 20px 0,
+                    calc(100% - 20px) 0, 100% 20px,
+                    100% calc(100% - 20px), calc(100% - 20px) 100%,
+                    20px 100%, 0 calc(100% - 20px));
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .screen-bezel {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+        /* Scanlines */
+        .screen-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 4px 100%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.4;
+        }
+        .control-blocker {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: transparent;
+            z-index: 20;
+            pointer-events: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: contrast(1.1) saturate(1.1);
+            outline: none;
+        }
+        /* Floating Stand */
+        .tv-stand {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            filter: blur(15px);
+            opacity: 0.4;
+            transition: background 0.5s ease;
+        }
+        .tv-brand {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.2);
+            font-family: var(--tech-font);
+            font-size: 14px;
+            letter-spacing: 8px;
+            z-index: 6;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+        .controls-hint {
+            margin-top: 60px;
+            font-family: var(--tech-font);
+            color: var(--primary-color);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulse 3s infinite;
+            text-shadow: 0 0 10px var(--primary-color);
+            transition: color 0.5s ease, text-shadow 0.5s ease;
+        }
+        .footer-credits {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-family: var(--body-font);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        /* Sound Toggle */
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        .sound-toggle:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px var(--primary-color);
+            transform: scale(1.1);
+        }
+        /* ROTATE WARNING */
+        #rotateWarning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--primary-color);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20000;
+            font-family: var(--tech-font);
+            text-align: center;
+        }
+        #rotateWarning h2 {
+            font-size: 24px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.4;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SOUND TOGGLE -->
+    <div class="sound-toggle" onclick="toggleSound()">
+        <span id="soundIcon">🔇</span>
+    </div>
+    <!-- INTRO SCREEN -->
+    <div id="introScreen">
+        <div class="power-assembly">
+            <div class="ring-outer"></div>
+            <div class="ring-dashed"></div>
+            <div class="ring-glow"></div>
+            <div id="powerBtn" onclick="startIntro()">⏻</div>
+        </div>
+        <div id="introMsg">SYSTEM INITIALIZING...</div>
+        <div id="typeMsg"></div>
+    </div>
+    <!-- ROTATE WARNING -->
+    <div id="rotateWarning">
+        <h2>⚠ SYSTEM ALERT ⚠</h2>
+        <p>Rotate Device for Optimal Viewing Experience</p>
+    </div>
+    <!-- MAIN UI -->
+    <div class="container" id="courseUI">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="brand-container">
+                <div class="brand">DATA WORLD</div>
+                <div class="brand-sub">SYSTEM_V.2.0</div>
+            </div>
+            <div class="module-list">
+                <!-- Colors: Cyan, Purple, Pink, Green, Yellow, Orange, Red, Blue, Teal, Magenta, Lime, Indigo, Violet, Gold, White -->
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAGzIvoS68k/kagxFI1vsAEVMsiknUV-eA/view?embed&hide_controls=1', this, '#00f3ff')">
+                    01. Data Modeling</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAGzIoUODDE/L7YBebWitOUxZcxQ6M7P1A/view?embed&hide_controls=1', this, '#bc13fe')">
+                    02. Joining</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAGzrZ1HhqQ/OIGOuEQiOF40-1YDF-2qpw/view?embed&hide_controls=1', this, '#ff0055')">
+                    03. Set Operators</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAGzrb_aG9c/CtaPSGjLzbD8Hz5vCe1lnA/view?embed&hide_controls=1', this, '#00ff9d')">
+                    04. Sub Query (Non-Corr)</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAGz9fGffqQ/Tjm9Z3AjcY6rMgTjHdAW2g/view?embed&hide_controls=1', this, '#ffcc00')">
+                    05. Sub Query (Corr)</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG0b9zc6j0/QCqcm27sR6LSAwTHkjMn_w/view?embed&hide_controls=1', this, '#ff6600')">
+                    06. CTE & View</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG3VLLbcDc/eETtcBwGDKcpxxgLDK7IkA/view?embed&hide_controls=1', this, '#ff3333')">
+                    07. Normalization</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG3pO8Yw0s/8y57XB5moVyrRqGQ0q-58Q/view?embed&hide_controls=1', this, '#0099ff')">
+                    08. Transaction</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG4RAFo2JI/84ZAWELgxFUbH_YCqJW8FA/view?embed&hide_controls=1', this, '#00ffcc')">
+                    09. Indexing</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAGyAY8wQwA/oA38fpvXM8sAGJjI1jwfOw/view?embed&hide_controls=1', this, '#ff00cc')">
+                    10. MongoDB Install</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG47fVqzrc/E_NOfyrT2Lj0Wn-Rzs0xZg/view?embed&hide_controls=1', this, '#ccff00')">
+                    11. CRUD Operations</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG5ckkOVgk/BndPSuA2Nhx_FeO2Wv9f-Q/view?embed&hide_controls=1', this, '#6600ff')">
+                    12. Update & Query Ops</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG5QELiBu0/jbDUl6rdsCX4FrtHiBHFDg/view?embed&hide_controls=1', this, '#cc00ff')">
+                    13. Embedding</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG5lQAWkwA/f4tO6lE3WHI56eQ7zYu33A/view?embed&hide_controls=1', this, '#ffd700')">
+                    14. Aggregation</div>
+                <div class="module-btn"
+                    onclick="load('https://www.canva.com/design/DAG5zZWZ_i4/15f0EsxMki-pjqpD1Ak54Q/view?embed&hide_controls=1', this, '#ffffff')">
+                    15. Final Session</div>
+            </div>
+        </div>
+        <!-- CONTENT -->
+        <div class="content-area">
+            <div class="tv-set">
+                <div class="screen-bezel">
+                    <div class="screen-overlay"></div>
+                    <div class="tv-brand">DATA WORLD</div>
+                    <div class="control-blocker"></div>
+                    <iframe id="frame"
+                        src="https://www.canva.com/design/DAGzIvoS68k/kagxFI1vsAEVMsiknUV-eA/view?embed&hide_controls=1"
+                        tabindex="0" allow="fullscreen"></iframe>
+                </div>
+                <div class="tv-stand"></div>
+            </div>
+            <div class="controls-hint">Use Left Arrow and Right arrow to navigate</div>
+            <div class="footer-credits">Ideation & Presentation Creation – Satyaki Das</div>
+        </div>
+    </div>
+    <script>
+        // Helper to convert hex to rgb for rgba usage
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ?
+                `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+        }
+        // Sound System
+        let soundEnabled = false;
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        function toggleSound() {
+            initAudio();
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            const btn = document.querySelector('.sound-toggle');
+            if (soundEnabled) {
+                icon.innerHTML = "🔊";
+                btn.style.boxShadow = "0 0 15px var(--primary-color)";
+                btn.style.background = "rgba(0, 243, 255, 0.2)";
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playTone(600, 'sine', 0.1); // Confirmation beep
+            } else {
+                icon.innerHTML = "🔇";
+                btn.style.boxShadow = "none";
+                btn.style.background = "rgba(0,0,0,0.6)";
+            }
+        }
+        function playTone(freq, type, duration) {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+        function startIntro() {
+            const introMsg = document.getElementById("introMsg");
+            const powerBtn = document.getElementById("powerBtn");
+            // Play sound if enabled (user might have clicked toggle before power)
+            // But usually power is first. We can auto-enable sound on power click if user wants?
+            // Better to just play sound if enabled.
+            playTone(200, 'sawtooth', 0.5);
+            // Animate rings on click
+            document.querySelector('.ring-dashed').style.animationDuration = '2s';
+            document.querySelector('.ring-outer').style.transform = 'scale(1.2)';
+            document.querySelector('.ring-outer').style.opacity = '0';
+            powerBtn.style.boxShadow = "0 0 80px var(--primary-color)";
+            powerBtn.style.transform = "scale(0.9)";
+            setTimeout(() => {
+                introMsg.style.display = "block";
+                typeWriter();
+            }, 500);
+        }
+        function typeWriter() {
+            const line1 = "Distraction is injurious to studies.";
+            const line2 = "It causes incomplete learning...";
+            let i = 0;
+            let j = 0;
+            const typeMsg = document.getElementById("typeMsg");
+            typeMsg.innerHTML = "";
+            function typeLine1() {
+                if (i < line1.length) {
+                    typeMsg.innerHTML += line1.charAt(i);
+                    playTone(800 + (Math.random() * 200), 'sine', 0.05); // Typing sound
+                    i++;
+                    setTimeout(typeLine1, 50);
+                } else {
+                    typeMsg.innerHTML += "<br>";
+                    setTimeout(typeLine2, 400);
+                }
+            }
+            function typeLine2() {
+                if (j < line2.length) {
+                    typeMsg.innerHTML += line2.charAt(j);
+                    playTone(800 + (Math.random() * 200), 'sine', 0.05); // Typing sound
+                    j++;
+                    setTimeout(typeLine2, 50);
+                } else {
+                    setTimeout(launchSystem, 1500);
+                }
+            }
+            typeLine1();
+        }
+        function launchSystem() {
+            const introScreen = document.getElementById("introScreen");
+            const courseUI = document.getElementById("courseUI");
+            playTone(100, 'square', 1.0); // Launch sound
+            introScreen.style.opacity = "0";
+            setTimeout(() => {
+                introScreen.style.display = "none";
+                courseUI.style.display = "flex";
+                // Trigger reflow
+                void courseUI.offsetWidth;
+                courseUI.style.opacity = "1";
+                checkOrientation();
+                // Initial focus
+                const frame = document.getElementById("frame");
+                frame.focus();
+            }, 800);
+        }
+        function checkOrientation() {
+            if (window.innerHeight > window.innerWidth) {
+                document.getElementById("rotateWarning").style.display = "flex";
+            } else {
+                document.getElementById("rotateWarning").style.display = "none";
+            }
+        }
+        window.addEventListener("resize", checkOrientation);
+        function load(link, btn, color) {
+            const frame = document.getElementById("frame");
+            frame.src = link;
+            playTone(600, 'sine', 0.1); // Click sound
+            // Update active state
+            const buttons = document.querySelectorAll('.module-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            // Update Theme Colors
+            if (color) {
+                document.documentElement.style.setProperty('--primary-color', color);
+                document.documentElement.style.setProperty('--primary-color-dim', color + '40'); // 25% opacity
+                const rgb = hexToRgb(color);
+                if (rgb) {
+                    document.documentElement.style.setProperty('--primary-rgb', rgb);
+                }
+            }
+            // Focus the iframe for keyboard navigation
+            frame.onload = function () {
+                frame.focus();
+                if (frame.contentWindow) {
+                    try { frame.contentWindow.focus(); } catch (e) { }
+                }
+            };
+        }
+        // Add hover sounds to buttons
+        document.querySelectorAll('.module-btn, #powerBtn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => playTone(400, 'sine', 0.05));
+        });
+        // Initial Setup
+        document.documentElement.style.setProperty('--primary-color', '#00f3ff');
+        document.documentElement.style.setProperty('--primary-color-dim', '#00f3ff40');
+        document.documentElement.style.setProperty('--primary-rgb', '0, 243, 255');
+        // Security
+        document.addEventListener("contextmenu", e => e.preventDefault());
+        document.onkeydown = function (e) {
+            if (e.keyCode == 123) return false;
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 73) return false;
+            if (e.ctrlKey && e.keyCode == 85) return false;
+            if (e.ctrlKey && e.keyCode == 83) return false;
+            if (e.ctrlKey && e.keyCode == 67) return false;
+        };
+    </script>
+</body>
+</html>
